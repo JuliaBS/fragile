@@ -11,31 +11,16 @@ from fragile.optimize.benchmarks import (
     StyblinskiTang,
 )
 
-"""
-@pytest.fixture()
-def benchmarks():
-    data = {
-        "sphere": {"env": Sphere, "point": numpy.zeros((1, 2)), "max_val": 0.0},
-        "rastrigin": {"env": Rastrigin, "point": numpy.zeros((1, 2)), "max_val": 0.0},
-        "eggholder": {
-            "env": EggHolder,
-            "point": numpy.array([512.0, 404.2319]).reshape(1, -1),
-            "max_val": 959.6406860351562,
-        },
-    }
-    return data
+wiki_bench_classes = [EggHolder, Rastrigin, Sphere, StyblinskiTang]
 
-"""
+
+@pytest.fixture(params=list(itertools.product(wiki_bench_classes, [2,])), scope="class")
+def wiki_benchmark(request):
+    cls, shape = request.param
+    return cls(dims=shape)
 
 
 class TestBenchmarks:
-    wiki_bench_classes = [EggHolder, Rastrigin, Sphere, StyblinskiTang]
-
-    @pytest.fixture(params=list(itertools.product(wiki_bench_classes, [2,])))
-    def wiki_benchmark(self, request):
-        cls, shape = request.param
-        return cls(dims=shape)
-
     def test_optimum(self, wiki_benchmark):
         best = wiki_benchmark.best_state
         new_shape = (1,) + tuple(best.shape)

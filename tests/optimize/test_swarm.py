@@ -6,7 +6,7 @@ from fragile.optimize import FunctionMapper
 from fragile.optimize.models import NormalContinuous
 
 
-@pytest.fixture()
+@pytest.fixture(scope="class")
 def mapper():
     def potential_well(x):
         return numpy.sum((x - 1) ** 2, 1) - 1
@@ -28,7 +28,7 @@ def mapper():
     )
 
 
-@pytest.fixture()
+@pytest.fixture(scope="class")
 def finished_swarm(mapper):
     mapper.walkers.reset()
     mapper.reset()

@@ -60,7 +60,7 @@ def env_data(request) -> Tuple[Environment, StatesModel]:
     return env, model_states
 
 
-@pytest.fixture()
+@pytest.fixture(scope="class")
 def batch_size():
     return 10
 
