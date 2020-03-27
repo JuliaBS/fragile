@@ -60,7 +60,7 @@ setup(
         "numba",
         "xxhash",
         "PyYAML",
-        "plangym>=0.0.3",
+        "plangym>=0.0.5",
     ],
     package_data={"": ["README.md"]},
     classifiers=[
