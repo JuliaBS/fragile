@@ -84,6 +84,7 @@ class Swarm(BaseSwarm):
             *args,
             **kwargs
         )
+        self._init_state = None
         self._notebook_container = None
         self._use_notebook_widget = use_notebook_widget
         self.setup_notebook_container()
@@ -147,6 +148,10 @@ class Swarm(BaseSwarm):
     def critic(self) -> BaseCritic:
         """Return the :class:`Critic` of the walkers."""
         return self._walkers.critic
+
+    @property
+    def init_state(self):
+        return self._init_state
 
     def get(self, name: str, default: Any = None) -> Any:
         """Access attributes of the :class:`Swarm` and its children."""
@@ -264,6 +269,7 @@ class Swarm(BaseSwarm):
         )
         model_states.update(init_actions=model_states.actions)
         self.walkers.reset(env_states=env_states, model_states=model_states)
+        self._init_state = copy.deepcopy(self.walkers.best_state)
         if self.tree is not None:
             root_id = (
                 self.walkers.get("id_walkers")[0]
