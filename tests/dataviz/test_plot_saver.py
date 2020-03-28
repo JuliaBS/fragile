@@ -10,18 +10,19 @@ from fragile.dataviz.plot_saver import PlotSaver
 from tests.dataviz.test_swarm_viz import swarm_dict, swarm_names, backends
 
 
-class TestPlotSaver:
-    @pytest.fixture(params=tuple(product(swarm_names, backends)), scope="class")
-    def plot_saver(self, request):
-        with warnings.catch_warnings():
-            warnings.filterwarnings("ignore", category=DeprecationWarning)
-            swarm_name, backend = request.param
-            holoviews.extension(backend)
-            swarm_viz = swarm_dict.get(swarm_name)()
-            swarm_viz.stream_interval = 1
-            plot_saver = PlotSaver(swarm_viz, output_path="Miau_db", fmt="png")
-            return plot_saver
+@pytest.fixture(params=tuple(product(swarm_names, backends)), scope="class")
+def plot_saver(request):
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore", category=DeprecationWarning)
+        swarm_name, backend = request.param
+        holoviews.extension(backend)
+        swarm_viz = swarm_dict.get(swarm_name)()
+        swarm_viz.stream_interval = 1
+        plot_saver = PlotSaver(swarm_viz, output_path="Miau_db", fmt="png")
+        return plot_saver
 
+
+class TestPlotSaver:
     def test_get_file_name(self, plot_saver):
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", category=DeprecationWarning)

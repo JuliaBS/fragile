@@ -18,15 +18,15 @@ def create_bounds(name):
         return lambda: Bounds(low=numpy.array([-5, -2, -3]), high=[5, 5, 5])
 
 
-@pytest.fixture(scope="module")
+bounds_fixture_params = ["scalars", "high_array", "low_array", "both_array", "high_list"]
+
+
+@pytest.fixture(params=bounds_fixture_params, scope="class")
 def bounds_fixture(request) -> Bounds:
     return create_bounds(request.param)()
 
 
 class TestBounds:
-    bounds_fixture_params = ["scalars", "high_array", "low_array", "both_array", "high_list"]
-
-    @pytest.mark.parametrize("bounds_fixture", bounds_fixture_params, indirect=True)
     def test_init(self, bounds_fixture):
         assert bounds_fixture.dtype is not None
         assert isinstance(bounds_fixture.low, numpy.ndarray)
@@ -35,13 +35,11 @@ class TestBounds:
         assert bounds_fixture.low.shape == bounds_fixture.shape
         assert bounds_fixture.high.shape == bounds_fixture.shape
 
-    @pytest.mark.parametrize("bounds_fixture", bounds_fixture_params, indirect=True)
     def test_shape(self, bounds_fixture: Bounds):
         shape = bounds_fixture.shape
         assert isinstance(shape, tuple)
         assert shape == (3,)
 
-    @pytest.mark.parametrize("bounds_fixture", bounds_fixture_params, indirect=True)
     def test_points_in_bounds(self, bounds_fixture):
         points = numpy.array([[0, 0, 0], [11, 0, 0], [0, 11, 0], [11, 11, 11]])
         res = bounds_fixture.points_in_bounds(points)

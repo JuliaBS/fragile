@@ -41,15 +41,16 @@ def kill_swarm(swarm):
     ray.shutdown()
 
 
+@pytest.fixture(params=swarm_names, scope="class")
+def export_swarm(request):
+    init_ray()
+    swarm = swarm_dict.get(request.param)()
+    request.addfinalizer(lambda: kill_swarm(swarm))
+    return swarm
+
+
 @pytest.mark.skipif(sys.version_info >= (3, 8), reason="Requires python3.7 or lower")
 class TestExportInterface:
-    @pytest.fixture(params=swarm_names, scope="class")
-    def export_swarm(self, request):
-        init_ray()
-        swarm = swarm_dict.get(request.param)()
-        request.addfinalizer(lambda: kill_swarm(swarm))
-        return swarm
-
     def test_reset(self, export_swarm):
         reset = ray.get(export_swarm.reset.remote())
         assert reset is None

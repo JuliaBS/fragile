@@ -165,16 +165,13 @@ class NetworkxTree(BaseTree):
                 epoch=n_iter,
             )
 
-    def prune_tree(self, alive_leafs: Set[int], from_hash: bool = False):
+    def prune_tree(self, alive_leafs: Set[int]):
         """
         Remove the branches that do not have a walker in their leaves.
 
         Args:
             alive_leafs: Contains the ids  of the leaf nodes that are being \
                          expanded by the walkers.
-            from_hash: from_hash: If ``True`` ``alive_leafs`` will be \
-                      considered a set of hashes of states. If ``False`` it \
-                      will be considered a set of node ids.
 
         Returns:
             None.
@@ -499,7 +496,7 @@ class HistoryTree(NetworkxTree):
         data attribute.
         """
         unpacked = zip(*batch_data)
-        return tuple(numpy.vstack(val) for val in unpacked)
+        return tuple(numpy.asarray(val) for val in unpacked)
 
     def _generate_batches(
         self, generator: NodeDataGenerator, names: NamesData, batch_size: int = None,

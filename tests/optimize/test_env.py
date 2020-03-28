@@ -61,7 +61,7 @@ def create_env_and_model_states(name="classic") -> Callable:
 env_fixture_params = ["local_minimizer", "function", "custom_domain_function"]
 
 
-@pytest.fixture(params=env_fixture_params)
+@pytest.fixture(params=env_fixture_params, scope="class")
 def env_data(request):
     if request.param in env_fixture_params:
         env, model_states = create_env_and_model_states(request.param)()
@@ -71,7 +71,7 @@ def env_data(request):
     return env, model_states
 
 
-@pytest.fixture()
+@pytest.fixture(scope="class")
 def function_env() -> Function:
     return Function.from_bounds_params(
         function=lambda x: numpy.ones(len(x)),
@@ -81,7 +81,7 @@ def function_env() -> Function:
     )
 
 
-@pytest.fixture()
+@pytest.fixture(scope="class")
 def batch_size():
     return N_WALKERS
 

@@ -177,12 +177,12 @@ test_scores = {
 }
 
 
-@pytest.fixture(params=swarm_names)
+@pytest.fixture(params=swarm_names, scope="class")
 def swarm(request):
     return swarm_dict.get(request.param)()
 
 
-@pytest.fixture(params=swarm_names)
+@pytest.fixture(params=swarm_names, scope="class")
 def swarm_with_score(request):
     swarm = swarm_dict.get(request.param)()
     score = test_scores[request.param]

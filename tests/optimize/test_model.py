@@ -24,7 +24,7 @@ def model(request):
     return create_model(request.param)()
 
 
-@pytest.fixture()
+@pytest.fixture(scope="class")
 def batch_size():
     return BATCH_SIZE
 

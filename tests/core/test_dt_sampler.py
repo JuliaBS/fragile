@@ -20,13 +20,14 @@ def uniform_dt():
 dt_samplers = [constant_dt, gaussian_dt, uniform_dt]
 
 
+@pytest.fixture(params=dt_samplers, scope="class")
+def dt_sampler(request) -> BaseDtSampler:
+    return request.param()
+
+
 class TestDtSampler:
 
     batch_size = 13
-
-    @pytest.fixture(params=dt_samplers)
-    def dt_sampler(self, request) -> BaseDtSampler:
-        return request.param()
 
     def test_get_params_dict(self, dt_sampler):
         param_dict = dt_sampler.get_params_dict()
